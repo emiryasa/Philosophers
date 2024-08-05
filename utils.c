@@ -54,3 +54,19 @@ void	ft_display_action(t_philo *philo, char *action)
 	else
 		pthread_mutex_unlock(&philo->data->print);
 }
+
+int	check_args(char **av)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (av[++i])
+	{
+		j = -1;
+		while (av[i][++j])
+			if (av[i][j] < 48 || av[i][j] > 57)
+				return (printf("Error: Invalid argument\n"), 1);
+	}
+	return (0);
+}
