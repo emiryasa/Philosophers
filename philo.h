@@ -6,7 +6,7 @@
 /*   By: eyasa <eyasa@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:31:41 by eyasa             #+#    #+#             */
-/*   Updated: 2024/07/24 19:44:04 by eyasa            ###   ########.fr       */
+/*   Updated: 2024/08/06 19:11:44 by eyasa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ typedef struct s_data
 
 int					thread_handle(t_data *data);
 long				ft_atol(const char *str);
-long				ft_time(void);
-void				ft_display_action(t_philo *philo, char *action);
+long				get_time(void);
+void				display_action(t_data *data, char *action);
+int					check_args(char **av);
+void				ft_usleep(long time);
 #endif

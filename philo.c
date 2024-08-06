@@ -6,7 +6,7 @@
 /*   By: eyasa <eyasa@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:33:19 by eyasa             #+#    #+#             */
-/*   Updated: 2024/07/27 13:21:42 by eyasa            ###   ########.fr       */
+/*   Updated: 2024/08/06 19:30:20 by eyasa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	init_philos(t_data *data)
 	i = -1;
 	while (++i < data->philo_count)
 	{
-		data->philos[i].id = i + 1;
+		data->philos[i].id = i;
 		data->philos[i].eat_count = 0;
 		data->philos[i].last_eat = data->start;
 		data->philos[i].action = NULL;
@@ -44,7 +44,7 @@ void	init_data(t_data *data, int ac, char **av)
 	data->dead = 0;
 	data->eat_count = 0;
 	data->philo_dead = 1;
-	data->start = ft_time();
+	data->start = get_time();
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->philo_count);
 	data->philos = malloc(sizeof(t_philo) * data->philo_count);
 	init_philos(data);

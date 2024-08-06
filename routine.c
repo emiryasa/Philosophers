@@ -6,11 +6,13 @@
 /*   By: eyasa <eyasa@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 23:15:28 by eyasa             #+#    #+#             */
-/*   Updated: 2024/07/24 19:43:53 by eyasa            ###   ########.fr       */
+/*   Updated: 2024/08/06 19:27:28 by eyasa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static void	eat(t_philo *philo, t_data *data);
 
 void	*philo_routine(void *ptr)
 {
@@ -19,18 +21,40 @@ void	*philo_routine(void *ptr)
 
 	philo = (t_philo *)ptr;
 	data = philo->data;
-	if (data->philo_dead)
-
+	while (data->philo_dead)
+	{
+		if (!data->philo_dead)
+			break ;
+		eat(philo, data);
+	}
 	return (NULL);
 }
 
-static void	one_philo(t_philo *philo)
+static void	eat(t_philo *philo, t_data *data)
 {
-	display(philo, FORK);
-	ft_usleep(philo->data->die_time);
-	display(philo, DEAD);
-	return ;
+	pthread_mutex_lock(&data->forks[philo->l_fork]);
+	display_action(data, FORK);
+	pthread_mutex_lock(&data->forks[philo->r_fork]);
+	display_action(data, FORK);
+	display_action(data, EATING);
+	philo->last_eat = get_time();
+	if (data->must_eat)
+		philo->eat_count++;
+	ft_usleep(data->eat_time);
+	pthread_mutex_unlock(&data->forks[philo->l_fork]);
+	pthread_mutex_unlock(&data->forks[philo->r_fork]);
+	display_action(data, SLEEPING);
+	ft_usleep(data->sleep_time);
+	display_action(data, THINKING);
 }
+
+// static void	one_philo(t_philo *philo)
+// {
+// 	display_action(philo, FORK);
+// 	ft_usleep(philo->data->die_time);
+// 	display_action(philo, DEAD);
+// 	return ;
+// }
 
 int	thread_handle(t_data *data)
 {
