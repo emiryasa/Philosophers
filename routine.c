@@ -13,6 +13,7 @@
 #include "philo.h"
 
 static void	eat(t_philo *philo, t_data *data);
+static void	one_philo(t_data *data);
 
 void	*philo_routine(void *ptr)
 {
@@ -21,6 +22,10 @@ void	*philo_routine(void *ptr)
 
 	philo = (t_philo *)ptr;
 	data = philo->data;
+	if (data->philo_count == 1)
+	{
+		one_philo(data);
+	}
 	while (data->philo_dead)
 	{
 		if (!data->philo_dead)
@@ -48,13 +53,13 @@ static void	eat(t_philo *philo, t_data *data)
 	display_action(data, THINKING);
 }
 
-// static void	one_philo(t_philo *philo)
-// {
-// 	display_action(philo, FORK);
-// 	ft_usleep(philo->data->die_time);
-// 	display_action(philo, DEAD);
-// 	return ;
-// }
+static void	one_philo(t_data *data)
+{
+	display_action(data, FORK);
+	ft_usleep(data->die_time);
+	display_action(data, DEAD);
+	return ;
+}
 
 int	thread_handle(t_data *data)
 {

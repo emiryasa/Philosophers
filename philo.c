@@ -40,7 +40,7 @@ void	init_data(t_data *data, int ac, char **av)
 	if (ac == 6)
 		data->must_eat = ft_atol(av[5]);
 	else
-		data->must_eat = -1;
+		data->must_eat = 0;
 	data->dead = 0;
 	data->eat_count = 0;
 	data->philo_dead = 1;

@@ -30,7 +30,7 @@ long	ft_atol(const char *str)
 		tmp = (tmp * 10) + (str[i++] - 48);
 	if ((tmp * sign < -2147483648 || tmp * sign > 2147483647)
 		&& printf("max int error\n"))
-		exit(1);
+		return (1);
 	return (tmp * sign);
 }
 
