@@ -6,11 +6,25 @@
 /*   By: eyasa <eyasa@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:33:19 by eyasa             #+#    #+#             */
-/*   Updated: 2024/08/06 19:30:20 by eyasa            ###   ########.fr       */
+/*   Updated: 2024/08/11 14:42:22 by eyasa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	destroy_data(t_data *data)
+{
+	int i;
+
+	i = -1;
+	while (++i < data->philo_count)
+	{
+		pthread_mutex_destroy(&data->forks[i]);
+		pthread_mutex_destroy(&data->philos[i].last_eat_mutex);
+	}
+	pthread_mutex_destroy(&data->print);
+	pthread_mutex_destroy(&data->dead_mutex);
+}
 
 void	init_philos(t_data *data)
 {
@@ -21,12 +35,13 @@ void	init_philos(t_data *data)
 	{
 		data->philos[i].id = i;
 		data->philos[i].eat_count = 0;
-		data->philos[i].last_eat = data->start;
 		data->philos[i].action = NULL;
 		data->philos[i].data = data;
+		data->philos[i].start = get_time();
 		data->philos[i].l_fork = i;
 		data->philos[i].r_fork = (i + 1) % data->philo_count;
 		pthread_mutex_init(&data->forks[i], NULL);
+		pthread_mutex_init(&data->philos[i].last_eat_mutex, NULL);
 	}
 	pthread_mutex_init(&data->print, NULL);
 }
@@ -34,19 +49,18 @@ void	init_philos(t_data *data)
 void	init_data(t_data *data, int ac, char **av)
 {
 	data->philo_count = ft_atol(av[1]);
-	data->die_time = ft_atol(av[2]);
+	data->live_time = ft_atol(av[2]);
 	data->eat_time = ft_atol(av[3]);
 	data->sleep_time = ft_atol(av[4]);
 	if (ac == 6)
 		data->must_eat = ft_atol(av[5]);
 	else
 		data->must_eat = 0;
-	data->dead = 0;
-	data->eat_count = 0;
-	data->philo_dead = 1;
-	data->start = get_time();
-	data->forks = malloc(sizeof(pthread_mutex_t) * data->philo_count);
+	data->philo_dead = 0;
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->philo_count);;
 	data->philos = malloc(sizeof(t_philo) * data->philo_count);
+	pthread_mutex_init(&data->dead_mutex, NULL);
+	pthread_mutex_init(&data->philo_count_mtx, NULL);
 	init_philos(data);
 }
 
@@ -60,6 +74,8 @@ int	main(int ac, char **av)
 		return (1);
 	init_data(&data, ac, av);
 	if (thread_handle(&data))
-		return (1);
+		destroy_data(&data);
+	free(data.forks);
+	free(data.philos);
 	return (0);
 }

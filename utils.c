@@ -6,7 +6,7 @@
 /*   By: eyasa <eyasa@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 17:16:28 by eyasa             #+#    #+#             */
-/*   Updated: 2024/08/06 19:30:05 by eyasa            ###   ########.fr       */
+/*   Updated: 2024/08/11 13:51:39 by eyasa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,34 +34,37 @@ long	ft_atol(const char *str)
 	return (tmp * sign);
 }
 
-long	get_time(void)
+long  get_time(void)
 {
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+	return (((time.tv_sec * 1000) + (time.tv_usec / 1000)));
 }
 
-void	ft_usleep(long time)
+void	ft_usleep(long long time)
 {
-	long	start;
+	long long	start;
 
 	start = get_time();
 	while (get_time() - start < time)
 		usleep(100);
 }
 
-void	display_action(t_data *data, char *action)
+void	display_action(t_philo *philo, char *action)
 {
-	pthread_mutex_lock(&data->print);
-	if (!data->philo_dead)
+	pthread_mutex_lock(&philo->data->print);
+	pthread_mutex_lock(&philo->data->dead_mutex);
+	if (philo->data->philo_dead)
 	{
-		pthread_mutex_unlock(&data->print);
+		pthread_mutex_unlock(&philo->data->dead_mutex);
+		pthread_mutex_unlock(&philo->data->print);
 		return ;
 	}
-	printf("%ld %d %s\n", get_time() - data->start, data->philos->id + 1,
+	pthread_mutex_unlock(&philo->data->dead_mutex);
+	printf("%ld %d %s\n", get_time() - philo->start, philo->id + 1,
 		action);
-	pthread_mutex_unlock(&data->print);
+	pthread_mutex_unlock(&philo->data->print);
 }
 
 int	check_args(char **av)

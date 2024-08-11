@@ -6,7 +6,7 @@
 /*   By: eyasa <eyasa@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:31:41 by eyasa             #+#    #+#             */
-/*   Updated: 2024/08/06 19:11:44 by eyasa            ###   ########.fr       */
+/*   Updated: 2024/08/11 13:51:34 by eyasa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ typedef struct s_philo
 	int				r_fork;
 	int				eat_count;
 	long			last_eat;
+	long			start;
 	char			*action;
+	pthread_mutex_t	last_eat_mutex;
 	pthread_t		thread;
 	struct s_data	*data;
 }					t_philo;
@@ -40,23 +42,24 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int				philo_count;
-	int				die_time;
+	int				live_time;
 	int				eat_time;
 	int				sleep_time;
 	int				must_eat;
 	int				dead;
-	int				eat_count;
 	int				philo_dead;
-	long			start;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
+	pthread_mutex_t philo_count_mtx;
+	pthread_mutex_t	dead_mutex;
 	t_philo			*philos;
 }					t_data;
 
 int					thread_handle(t_data *data);
 long				ft_atol(const char *str);
 long				get_time(void);
-void				display_action(t_data *data, char *action);
+void				display_action(t_philo *philo, char *action);
 int					check_args(char **av);
-void				ft_usleep(long time);
+void				ft_usleep(long long time);
+
 #endif

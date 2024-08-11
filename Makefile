@@ -1,9 +1,7 @@
 NAME= philo
 CC= gcc
-CFLAGS= -Wall -Wextra -Werror -g -fsanitize=thread
-SRCS= philo.c \
-	  utils.c \
-	  routine.c \
+CFLAGS= -Wall -Wextra -Werror
+SRCS= philo.c utils.c routine.c
 
 OBJS= $(SRCS:.c=.o)
 
