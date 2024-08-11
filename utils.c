@@ -6,7 +6,7 @@
 /*   By: eyasa <eyasa@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 17:16:28 by eyasa             #+#    #+#             */
-/*   Updated: 2024/08/11 13:51:39 by eyasa            ###   ########.fr       */
+/*   Updated: 2024/08/11 18:40:57 by eyasa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,12 @@ long	ft_atol(const char *str)
 			sign *= -1;
 	while (str[i] >= 48 && str[i] <= 57)
 		tmp = (tmp * 10) + (str[i++] - 48);
-	if ((tmp * sign < -2147483648 || tmp * sign > 2147483647)
-		&& printf("max int error\n"))
-		return (1);
+	if ((tmp * sign < -2147483648 || tmp * sign > 2147483647))
+		return (0);
 	return (tmp * sign);
 }
 
-long  get_time(void)
+long	get_time(void)
 {
 	struct timeval	time;
 
@@ -44,7 +43,7 @@ long  get_time(void)
 
 void	ft_usleep(long long time)
 {
-	long long	start;
+	long	start;
 
 	start = get_time();
 	while (get_time() - start < time)
@@ -62,8 +61,7 @@ void	display_action(t_philo *philo, char *action)
 		return ;
 	}
 	pthread_mutex_unlock(&philo->data->dead_mutex);
-	printf("%ld %d %s\n", get_time() - philo->start, philo->id + 1,
-		action);
+	printf("%ld %d %s\n", get_time() - philo->start, philo->id + 1, action);
 	pthread_mutex_unlock(&philo->data->print);
 }
 
